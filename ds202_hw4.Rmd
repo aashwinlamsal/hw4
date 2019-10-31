@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Homework 4: Part 1
 Download the Ames specific liquor sales data to my local files
 
-```{r, echo=FALSE}
+```{r}
 if (file.exists("alcohol.rds")) {
   data <- readRDS("alcohol.rds")
 } else {
