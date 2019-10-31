@@ -85,15 +85,12 @@ head(newData) #checking if changes were made
 #str(newData) checking data types of Month, Day, Year
 ```
 ##Part 3: First overview
-For the first overview, I'll plot a scatterplot of the lattitude and longitudes of store locations
+For the first overview, I'll plot a scatterplot of the lattitude and longitudes of store locations, and then create a visual breakdown of the liquor categories, with volume sold being incorporated as well.
 ```{r}
 library(ggplot2)
 
-ggplot(newData, aes(x=newData$lattitude, y=newData$longitude)) + geom_point() + labs(x = "Lattitude", y= "Longitude", title = "Spread of Liquor Store Locations by Lattitude and Longitude")
+ggplot(newData, aes(x=newData$lattitude, y=newData$longitude)) + geom_point() + labs(x = "Lattitude", y= "Longitude", title = "Spread of Liquor Store Locations by Lattitude and Longitude") #initial scatterplot of long. and latt. of the store locations
 
-
-
-
-
+ggplot(newData, aes(Category_Name, Volume_Sold_.Liters.)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle =90, hjust =1, size = 4)) + labs(title = "Volume of Liquor Sold by Category of Liquor", x = "Category of Liquor", y = "Volume Sold (liters)") #This was the only way I could manage to show the relationship between the category of liquor and the volume sold from each category, if you could comment the solution for this ggplot I would really appreciate it!
 ```
 
