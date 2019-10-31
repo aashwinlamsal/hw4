@@ -9,22 +9,91 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Homework 4: Part 1
+Download the Ames specific liquor sales data to my local files
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r, echo=FALSE}
+if (file.exists("alcohol.rds")) {
+  data <- readRDS("alcohol.rds")
+} else {
+  url <- "https://github.com/lbchu/ds202_labs/raw/master/ames.csv"
+  data <- readr::read_csv(url)
+  saveRDS(data, file="alcohol.rds")
+} 
 ```
 
-## Including Plots
+## Part 2: Data Cleaning
 
-You can also embed plots, for example:
+The following is a snapshot of the data, and judging by this, I'm going to be changing the variable names of the ones that have a space separating the 2 words that make up its respective name.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+print(data, width=Inf) #many of the columns have spaces between their respective column names, so using the substitute function, I'm going to replace the spaces with underscores
+names(data)
+
+names(data) <- sub(" ", "_", names(data)) #since sub replaces the first instance of the space, I ran it twice so that it can catch all the spaces, especially in the longer variable names
+names(data) <- sub(" ", "_", names(data))
+
+names(data) # ran again to check if the changes had occurred
+
+str(data)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Next we extract the geographic lattitude and longitude from "Store_Location".
+
+```{r}
+library(tidyverse)
+newData <- data
+point_split = strsplit(data$Store_Location, split = " ") #this line splits the Store Location at each instance of a space
+newData = transform(newData, Point = sapply(point_split, "[", 1), lattitude= sapply(point_split, "[", 2), longitude = sapply(point_split, "[", 3))
+
+
+newData <- newData[-8]#removing the "Store_Location" column since we extracted the latt. and long. already.
+newData <- newData[-24] #removing the "Point" column, since all it had as its entries were the word "POINT"
+#Next, I have to remove the left parenthesis and right parenthesis for lattitude and longitude respectively.
+
+newData$lattitude <- gsub("\\(", "", newData$lattitude) #left parenthesis removed
+newData$longitude <- gsub("\\)", "", newData$longitude) #right parenthesis removed
+
+#Replacing the INVOICE.Item_NUMBER "INV-" characters so all that remains is just the numbers, for type transformation later
+newData$Invoice.Item_Number <- gsub("INV-", "", newData$Invoice.Item_Number)
+#Now I choose 5 variables that need their data type changed, and proceed to change them.
+#str(newData)
+#Judging from the structure, I opted to change the types of the following:
+
+#Zip_Code from numeric to factor
+#lattitude from character to numeric
+#longitutde from character to numeric
+#Invoice.Item_Number from character to numeric
+#Vendor_Number from character to numeric
+
+newData$Zip_Code <- as.factor(newData$Zip_Code)
+newData$lattitude <- as.numeric(newData$lattitude)
+newData$longitude <- as.numeric(newData$longitude)
+newData$Invoice.Item_Number <- as.numeric(newData$Invoice.Item_Number)
+newData$Vendor_Number <- as.numeric(newData$Vendor_Number)
+
+#str(newData) checking to see if changes were made
+
+#Finally, I extract the year, month, and day from the Date column and drop it once the new columns are made
+#I'm using the same method as above to extract lattitude and longitude from Store_Location
+
+date_split = strsplit(data$Date, split = "/") #this line splits the Date at every instance of a forward slash
+newData = transform(newData, Month = sapply(date_split, "[", 1), Day= sapply(date_split, "[", 2), Year = sapply(date_split, "[", 3))
+newData = newData[-2] #dropping the previous date column, since we already extracted the Days, Months, and Years
+
+head(newData) #checking if changes were made
+#str(newData) checking data types of Month, Day, Year
+```
+##Part 3: First overview
+For the first overview, I'll plot a scatterplot of the lattitude and longitudes of store locations
+```{r}
+library(ggplot2)
+
+ggplot(newData, aes(x=newData$lattitude, y=newData$longitude)) + geom_point() + labs(x = "Lattitude", y= "Longitude", title = "Spread of Liquor Store Locations by Lattitude and Longitude")
+
+
+
+
+
+```
+
