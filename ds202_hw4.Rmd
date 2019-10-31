@@ -27,7 +27,8 @@ if (file.exists("alcohol.rds")) {
 The following is a snapshot of the data, and judging by this, I'm going to be changing the variable names of the ones that have a space separating the 2 words that make up its respective name.
 
 ```{r}
-print(data, width=Inf) #many of the columns have spaces between their respective column names, so using the substitute function, I'm going to replace the spaces with underscores
+head(data)
+#print(data, width=Inf) commented out because it made the HTML file too lengthy #many of the columns have spaces between their respective column names, so using the substitute function, I'm going to replace the spaces with underscores
 names(data)
 
 names(data) <- sub(" ", "_", names(data)) #since sub replaces the first instance of the space, I ran it twice so that it can catch all the spaces, especially in the longer variable names
