@@ -79,7 +79,6 @@ newData$Vendor_Number <- as.numeric(newData$Vendor_Number)
 
 date_split = strsplit(data$Date, split = "/") #this line splits the Date at every instance of a forward slash
 newData = transform(newData, Month = sapply(date_split, "[", 1), Day= sapply(date_split, "[", 2), Year = sapply(date_split, "[", 3))
-newData = newData[-2] #dropping the previous date column, since we already extracted the Days, Months, and Years
 
 head(newData) #checking if changes were made
 #str(newData) checking data types of Month, Day, Year
@@ -108,6 +107,19 @@ ggplot(dailySold2018, aes(Day, Sale_.Dollars.)) + geom_point() + facet_wrap(~Mon
 ```
 As far as patterns go, volume of liquor sold is generally higher in the fall semester than in the spring, this could be due to the change in season, as well as the lack of any sports seasons occurring during the spring post-March. I can also see spikes during certain parts of the year. Valentines day, and the week prior to it, had seen a very quick rise in liquor sales. Graduation week in May also had major spikes in liquor sales, but the slow months (as in the volume of liquor sold doesn't exceed 1250 liters on any given day) for liquor sales were as follows: January, March, April, July, August, and November. As far as dates that coincide with ISU home football games go, there is definitely a correlation, with liquor sales being very low, or even zero, on days where the football team wasn't playing. 
 On home football days, the volume of liquor sold is higher than on days when the team plays their away games, and it goes to show how much the liquor purchasing habits of those who live in Ames revolve around the sports season.
+
+##Part 5: Dealing with the Date Variable
+Use the lubridate package to convert the variable Date from a character to a date. Implement this change.
+
+```{r}
+library(lubridate)
+
+str(newData) #Date is a character data type at this point
+
+newData$Date <- mdy(newData$Date) 
+str(newData) #the mdy function above changes the data type of Date from character to date
+
+```
 
 
 
