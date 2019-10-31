@@ -93,4 +93,24 @@ ggplot(newData, aes(x=newData$lattitude, y=newData$longitude)) + geom_point() + 
 
 ggplot(newData, aes(Category_Name, Volume_Sold_.Liters.)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle =90, hjust =1, size = 4)) + labs(title = "Volume of Liquor Sold by Category of Liquor", x = "Category of Liquor", y = "Volume Sold (liters)") #This was the only way I could manage to show the relationship between the category of liquor and the volume sold from each category, if you could comment the solution for this ggplot I would really appreciate it!
 ```
+##Part 4: Data Exploration Cont.
+For this part, I found the daily sales liquor sales in Ames in 2018. Then, I had summarized the number of sales, volume of liquor sold and amount of money spent. Must plot volume sold by day (use a scatterplot of volume by day and facet by month), and describe any patterns. Find the dates for ISU football home games in Fall 2018, and look for patterns in liquor purchases.
+
+```{r}
+dailySold2018 <- subset(newData, Year =="2018") #subsetting the clean data by year for 2018 sales.
+
+ggplot(dailySold2018, aes(Day, Bottles_Sold)) + geom_point() + facet_wrap(~Month) + labs(title = "Bottles Sold per Day, during Each Month", x = "Day of the Month", y = "Number of Bottles Sold") + theme(axis.text.x = element_text(angle =90, hjust =1, size = 4)) #Total bottles sold per day for each month of 2018
+
+ggplot(dailySold2018, aes(Day, Volume_Sold_.Liters.)) + geom_point() + facet_wrap(~Month) + labs(title = "Volume of Liquor in Liters Sold per Day, during Each Month", x = "Day of the Month", y = "Volume of Liquor (liters)") + theme(axis.text.x = element_text(angle =90, hjust =1, size = 4)) #Total volume of liquor (in liters) sold per day for each month of 2018
+
+ggplot(dailySold2018, aes(Day, Sale_.Dollars.)) + geom_point() + facet_wrap(~Month) + labs(title = "Total Sales in Dollars per Day, during Each Month", x = "Day of the Month", y = "Dollars") + theme(axis.text.x = element_text(angle =90, hjust =1, size = 4)) #Total dollars in sales per day for each month of 2018
+
+```
+As far as patterns go, volume of liquor sold is generally higher in the fall semester than in the spring, this could be due to the change in season, as well as the lack of any sports seasons occurring during the spring post-March. I can also see spikes during certain parts of the year. Valentines day, and the week prior to it, had seen a very quick rise in liquor sales. Graduation week in May also had major spikes in liquor sales, but the slow months (as in the volume of liquor sold doesn't exceed 1250 liters on any given day) for liquor sales were as follows: January, March, April, July, August, and November. As far as dates that coincide with ISU home football games go, there is definitely a correlation, with liquor sales being very low, or even zero, on days where the football team wasn't playing. 
+On home football days, the volume of liquor sold is higher than on days when the team plays their away games, and it goes to show how much the liquor purchasing habits of those who live in Ames revolve around the sports season.
+
+
+
+
+
 
